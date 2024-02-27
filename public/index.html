@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Robot Controller</title>
+        <style>
+            :root {
+                --fontFamily: monospace;
+                --fontSize: 1.1em;
+                --lightColor: #F0F0F0;
+                --darkColor: #333;
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                margin-bottom: 1em;
+                outline: 0;
+                color: inherit;
+                font-family: inherit;
+            }
+
+            body {
+                font-family: var(--fontFamily);
+                background-color: var(--darkColor);
+                color: var(--lightColor);
+                font-size: var(--fontSize);
+            }
+
+            input {
+                background-color: var(--lightColor);
+                color: var(--darkColor);
+                padding: 0.5rem;
+                border: 0;
+            }
+
+            input:focus {
+                outline: none;
+            }
+
+            header, section {
+                display: flex;
+                flex-direction: column;
+                padding: 2rem;
+            }
+
+            #output {
+                padding: 2rem;
+                margin: 2rem;
+                background-color: black;
+                box-shadow: 5px 5px 3px rgba(0,0,0,0.3);
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>Robot Controller Interface</h1>
+            <p>
+                Use the text field below to send commands to the robot and read out the resulting position.
+            </p>
+
+            <form id="robotcontroller">
+                <label>
+                    <strong>Command: </strong> 
+                    <input type="text" name="input" required />
+                </label>
+                <input type="submit" value="Send command" />
+            </form>
+        </header>
+
+        <section>
+            <h2>Robot output</h2>
+            <aside id="output">Run command to update output</aside>
+        </section>
+
+        <script lang="application/javascript">
+            const inputForm = document.getElementById('robotcontroller');
+
+            // Set up logic to post a form and present results
+            inputForm.addEventListener('submit', event => {
+                event.preventDefault();
+
+                // Post the 
+            });
+        </script>
+    </body>
+</html>
