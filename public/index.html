@@ -44,11 +44,12 @@
                 display: flex;
                 flex-direction: column;
                 padding: 2rem;
+                max-width: 600px;
+                margin-inline: auto;
             }
 
             #output {
                 padding: 2rem;
-                margin: 2rem;
                 background-color: black;
                 box-shadow: 5px 5px 3px rgba(0,0,0,0.3);
             }
@@ -58,31 +59,50 @@
         <header>
             <h1>Robot Controller Interface</h1>
             <p>
-                Use the text field below to send commands to the robot and read out the resulting position.
+                Use the text field below the message box to send commands to the robot and read out the resulting position.
             </p>
-
-            <form id="robotcontroller">
-                <label>
-                    <strong>Command: </strong> 
-                    <input type="text" name="input" required />
-                </label>
-                <input type="submit" value="Send command" />
-            </form>
         </header>
 
         <section>
-            <h2>Robot output</h2>
-            <aside id="output">Run command to update output</aside>
+            <aside id="output">
+                Welcome to My Little Robot! Please proceed to input grid size of the robot habitat in the command box above, using two numbers separated by a space.<br/><br/>
+                Example: 4 5
+            </aside>
+            
+            <form id="robotcontroller">
+                <label>
+                    <input type="text" name="input" required placeholder="What is your command?" />
+                </label>
+                <input type="submit" value="Send command" />
+            </form>
         </section>
 
         <script lang="application/javascript">
             const inputForm = document.getElementById('robotcontroller');
+            const outputArea = document.getElementById('output');
 
             // Set up logic to post a form and present results
             inputForm.addEventListener('submit', event => {
                 event.preventDefault();
+                const commandField = inputForm.querySelector('input[name=input]');
+                const command = commandField.value;
 
-                // Post the 
+                // Post the input from the form and get the result from backend.
+                // Validate input in the backend - never trust the frontend!
+                fetch('http://localhost:3000/control', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({command})
+                })
+                .then(res => res.json())
+                .then(data => {
+                    // Output information about status and/or orientation
+                    outputArea.innerHTML = data.status;
+                    commandField.value = '';
+                })
+                .catch(error => {
+                    outputArea.innerHTML = error.stringify;
+                });
             });
         </script>
     </body>
