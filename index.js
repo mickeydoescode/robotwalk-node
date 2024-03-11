@@ -24,16 +24,16 @@ app.post('/control', (req, res) => {
         if (robot === undefined) {
             // In this case, we can safely assume that it's first run and the robot is not born yet
             
-            // Validate and sanity check, for this action command length must be exactly two (x and y)
-            if (cmd.length !== 2) {
-                throw new Error('Grid size must be defined as two integers separated by a space, such as "5 5"');
+            // Validate and sanity check, for this action command length must be exactly one (the radius of the room)
+            if (cmd.length !== 1) {
+                throw new Error('Room size must be defined as a positive integer representing the radius of the circle');
             }
             
             // The robot is born, and the grid is defined
-            robot = new robotController(parseInt(cmd[0]), parseInt(cmd[1]));
+            robot = new robotController(parseInt(cmd[0]));
 
             // Return the next instruction to UI
-            res.json({status: 'Great, the grid size is ' + cmd[0] + ' ' + cmd[1] + '. Now, define starting position in the grid and an initial direction in which to face, such as "1 2 N".'});
+            res.json({status: 'Great, the room radius is ' + cmd[0] + '. Now, define starting position in the grid and an initial direction in which to face, such as "1 2 N".'});
         } else {
             // Check if robot coordinates have been set. Otherwise treat input as starting instructions
             let robotPosition = robot.getPosition();
@@ -42,7 +42,7 @@ app.post('/control', (req, res) => {
                 // Treat input as starting position
                 // Validate and sanity check, for this action command length must be exactly three (x, y and orientation)
                 if (cmd.length !== 3) {
-                    throw new Error('Starting position must be defined as two integers and an orientation represented by one letter, all separated by spaces, such as "1 2 N"');
+                    throw new Error('Starting position must be defined as two integers and an orientation represented by one letter (either in English or Swedish notation), all separated by spaces, such as "1 2 N"');
                 }
 
                 // Further validation will be made in the robot controller. Also parse the X and Y as integers.
@@ -54,8 +54,8 @@ app.post('/control', (req, res) => {
                 const instructions = cmd.join('').toUpperCase();
 
                 // Then make sure it's only containing F, L or R
-                if (!instructions.match("[FLR]+")) {
-                    throw new Error('Navigation instruction can only contain F for Forward, L for Left and R for Right. Right?');
+                if (!instructions.match("[FVLHR]+")) {
+                    throw new Error('Navigation instruction can only contain F for Forward, L or V for Left (Vänster) and R or H for Right (Höger). Right?');
                 }
 
                 // Now the input is sane enough to pass to the robot. But remember, if the robot walks off the edge, it dies and the program should also die.
@@ -63,7 +63,7 @@ app.post('/control', (req, res) => {
             }
             
             // If all goes well, return position to the UI
-            res.json({status: 'The robot now has a position of ' + robotPosition.x + ' ' + robotPosition.y + ' and is facing ' + robotPosition.orientation + '.<br /><br />Where do you want to go next? Input F for Forwards, R for turn Right, L for turn Left, after one another without spacing to string a command together.'});
+            res.json({status: 'The robot now has a position of ' + robotPosition.x + ' ' + robotPosition.y + ' and is facing ' + robotPosition.orientation + '.<br /><br />Where do you want to go next? Input F for Forward, L or V for Left (Vänster) and R or H for Right (Höger), after one another without spacing to string a command together.'});
         }
     } catch (error) {
         res.status(400).json({status: error.message});
