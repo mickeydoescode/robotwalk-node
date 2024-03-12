@@ -23,3 +23,9 @@ A decision was made to utilize a web frontend for ease of use, where the command
 The program is intentionally made to allow for grid sizes up to "maxInt", and to simplify a bit floats will be crudely parsed as integers.
 
 As expandability goes, the front- and back-end could trivially be modified to allow for graphical representation of the grid and the position and orientation of the robot by also returning the grid size in addition to position. The front-end can then render according to this information.
+
+## Update to accomodate for a circular room (and Swedish instructions)
+
+By request the application was updated to accepting Swedish notation for directions as well ("N" for Norr, "S" for Söder are the same, but added "V" for Väster and "Ö" for Öster as well as "H" for Höger and "V" for Vänster). It's possible to mix Swedish and English notation in the same command if you wish.
+
+The update also modifies the code to instead allow for a circular room with a radius of n, and checks to make sure that the robot doesn't cross too far over the boundary while navigating. This is implemented using trigonometric functions and instead of using directions using degrees in the processing code. Current coordinates are still stored as cartesian integers in order to not have reported coordinates be decimal and therefore possibly hard to read at a glance, at the cost of precision. This behavior can be adjusted easily though.
